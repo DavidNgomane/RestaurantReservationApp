@@ -1,21 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
+
+import HomePage from './Screens/HomePage';
+import Bookings from './Screens/Bookings';
+import Profile from './Screens/Profile';
+import RestaurantDetails from './Screens/RestaurantDetails';
+import BookingForm from './Screens/BookingForm';
+import Preview from './Screens/Preview';
+import Finished from './Screens/Finished';
+
+const Stack = createNativeStackNavigator();
+
+const MyStack = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomePage} options= {{headerShown: false}}/>
+        <Stack.Screen name="Bookings" component={Bookings} options= {{headerShown: false}}/>
+        <Stack.Screen name="Profile" component={Profile} options= {{headerShown: false}}/>
+        <Stack.Screen name="RestaurantDetails" component={RestaurantDetails} options= {{headerShown: false}}/>
+        <Stack.Screen name="BookingForm" component={BookingForm} options= {{headerShown: false}}/>
+        <Stack.Screen name="Preview" component={Preview} options= {{headerShown: false}}/>
+        <Stack.Screen name="Finished" component={Finished} options= {{headerShown: false}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+export default  MyStack;
