@@ -1,57 +1,93 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView,ScrollView, Image, TextInput, Text,  } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, SafeAreaView,ScrollView, 
+TextInput, Text, ImageBackground } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import constant from 'expo-constants';
+import { auth, db } from '../data/firebase'
+
 
 const image1 = {uri: "https://images.unsplash.com/photo-1565650834520-0b48a5c83f43?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzh8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
 const BookingForm = ({route, navigation}) => {
 
-  const { name } = route.params;
-
+  const { name, adminuid } = route.params;
 
   const [number, setNumber] = useState();
-  const [text, setText] = useState();
-  const [text1, setText1] = useState();
+  const [date, setDate] = useState();
+  const [time, setTime] = useState();
+
+  const booking = () => {
+    const user = auth.currentUser;
+      navigation.navigate("Preview", {
+        restaurant: name,
+        number: number,  
+        date: date,
+        time: time,
+        adminuid: adminuid
+      });
+
+          return db.collection('Bookings').add({
+          uid: user.uid,
+          restaurant: name,
+          numberOfPeople: number,  
+          date: date,
+          time: time,
+          adminuid: adminuid
+      })
+     
+    
+    .catch((error) => {
+     
+      const errorMessage = error.message;
+      alert(errorMessage)
+    });
+  }
 
   return (
     <View  style={styles.container}>
       <View style={styles.Top}>
-                <Image source = {image1} resizeMode="stretch" style={styles.image1}/>
+        <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
             <View  style={styles.HeadText}>
-                <Text style={styles.TextRestaurant}>
+              
+            <TouchableOpacity style={{marginHorizontal: -10}}>
+                <FontAwesome name="arrow-circle-left" size={30} color="white" onPress = {() => navigation.navigate("Home")}/>
+              </TouchableOpacity>
 
-                  Book Table
-                </Text>
+              <Text style={styles.TextRestaurant}>
+                Make a Reservation
+              </Text>
+
             </View>
-        </View>
+        </ImageBackground>
+      </View>
+
 
         <SafeAreaView>
           <ScrollView>
           <View style={styles.TextField}>
             <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
-          <FontAwesome5 name="users" size={24} color="black" />
-          <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold"}}>Number of People</Text>
-          </View>
-          <TextInput 
-            keyboardType='numeric'
-            style={styles.input}
-            onChangeText={text => setNumber(text)}
-            value={number}
-          />
+              <FontAwesome5 name="users" size={24} color="black" />
+              <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold"}}>Number of People</Text>
+              </View>
+              <TextInput 
+                keyboardType='numeric'
+                style={styles.input}
+                onChangeText={text => setNumber(text)}
+                value={number}
+              />
           </View>
 
           <View style={styles.TextField}>
-          <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
-          <FontAwesome name="calendar" size={24} color="black" />
-          <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold", }}>Date Preferred</Text>
-          </View>
-          <TextInput 
-            style={styles.input}
-            onChangeText={text => setText(text)}
-            value={text}
-          />
+            <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
+            <FontAwesome name="calendar" size={24} color="black" />
+            <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold", }}>Date Preferred</Text>
+            </View>
+            <TextInput 
+              style={styles.input}
+              onChangeText={date => setDate(date)}
+              value={date}
+            />
           </View>
 
           <View style={styles.TextField}>
@@ -61,31 +97,19 @@ const BookingForm = ({route, navigation}) => {
           </View>
           <TextInput 
             style={styles.input}
-            onChangeText={text => setText1(text)}
-            value={text1}
+            onChangeText={time => setTime(time)}
+            value={time}
           />
           </View>
 
           <View style={styles.Button}>
-            <TouchableOpacity  onPress = {() => navigation.navigate("Preview", {
-              resto: name,
-              number: number,
-              text: text,
-              text1: text1
-            })} style={styles.submitButton}>
+            <TouchableOpacity  onPress = { booking } style={styles.submitButton}>
               <Text style={styles.submitText}>Submit</Text>
             </TouchableOpacity>
           </View>
 
           </ScrollView>
           </SafeAreaView>
-
-        <View style={styles.Tab}>
-        <FontAwesome name="home" size={24} color="white" onPress = {() => navigation.navigate("Home")}/>
-        <FontAwesome name="list" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Bookings")}/>
-        <FontAwesome name="user-circle-o" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Profile")}/>
-        </View>
-        
     </View>
   )
 }
@@ -94,6 +118,7 @@ export default BookingForm;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#d3d3d3",
 },
   Tab: {
     flexDirection: "row",
@@ -121,16 +146,21 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20
   },
   HeadText:{
-    marginTop: -60,
+    flexDirection: "row",
+    marginVertical: -20,
     justifyContent: "center",
     textAlign: "center",
     alignSelf: "center",
     height: 80,
+    marginHorizontal: 30,
   },
   TextRestaurant:{
     fontSize: 40,
     color: "white",
-    height: 150,
+    height: 120,
+    justifyContent: "center",
+    textAlign: "center",
+    alignSelf: "center",
   },
   input: {
     height: 40,
@@ -144,10 +174,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 100,
     width: 300,
-    backgroundColor: "#d3d3d3",
+    backgroundColor: "#ffffff",
     padding: 10,
     paddingTop: 3,
-    marginTop: 10
+    marginTop: 10,
+    borderWidth: 1
   },
   submitButton: {
       justifyContent: "center",

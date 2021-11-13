@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Image, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 
@@ -30,18 +30,11 @@ const BookingForm = ({navigation}) => {
             </TouchableOpacity>
         </View>
 
-        <View style={styles.Button}>
-            <TouchableOpacity  onPress = {() => navigation.navigate("Home")} style={styles.submitButton}>
-              <Text style={styles.submitText}>Return to Home</Text>
-            </TouchableOpacity>
-        </View>
-        </View>
-      
-
-        <View style={styles.Tab}>
-        <FontAwesome name="home" size={24} color="white" onPress = {() => navigation.navigate("Home")}/>
-        <FontAwesome name="list" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Bookings")}/>
-        <FontAwesome name="user-circle-o" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Profile")}/>
+          <View style={styles.Button}>
+              <TouchableOpacity  onPress = {() => navigation.navigate("Home")} style={styles.submitButton}>
+                <Text style={styles.submitText}>Return to Home</Text>
+              </TouchableOpacity>
+          </View>
         </View>
     </View>
   )

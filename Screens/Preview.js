@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, SafeAreaView, Image, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text, ImageBackground } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 
@@ -9,33 +9,33 @@ const BookingForm = ({route, navigation}) => {
 
   return (
     <View  style={styles.container}>
-      <View style={styles.Top}>
-          <Image source = {image1} resizeMode="stretch" style={styles.image1}/>
-          <View  style={styles.HeadText}>
-            <Text style={styles.TextRestaurant}>
-              Book Table
-            </Text>
-          </View>
-        </View>
+       <View style={styles.Top}>
+        <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
+            <View  style={styles.HeadText}>
+              
+            <TouchableOpacity style={{marginHorizontal: -10}}>
+                <FontAwesome name="arrow-circle-left" size={30} color="white" onPress = {() => navigation.navigate("BookingForm")}/>
+              </TouchableOpacity>
+
+              <Text style={styles.TextRestaurant}>
+                Make a Reservation
+              </Text>
+
+            </View>
+        </ImageBackground>
+      </View>
 
         <View style={styles.preview}>
           <Text style={{fontSize: 30, color: "#2e8b57"}}>Restaurant: {route.params.resto}</Text>
-          <Text >Number of people:{route.params.number}</Text>
-          <Text >Date Preferred: {route.params.text}</Text>
-          <Text >Time Preferred: {route.params.text1}</Text>
+          <Text >Number of people:{route.params.number}</Text> 
+          <Text >Date Preferred: {route.params.date}</Text>
+          <Text >Time Preferred: {route.params.time}</Text>
         </View>
 
         <View style={styles.Button}>
             <TouchableOpacity  onPress = {() => navigation.navigate("Finished")} style={styles.submitButton}>
               <Text style={styles.submitText}>Confirm Booking</Text>
             </TouchableOpacity>
-        </View>
-      
-
-        <View style={styles.Tab}>
-        <FontAwesome name="home" size={24} color="white" onPress = {() => navigation.navigate("Home")}/>
-        <FontAwesome name="list" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Bookings")}/>
-        <FontAwesome name="user-circle-o" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Profile")}/>
         </View>
     </View>
   )
@@ -72,16 +72,21 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20
   },
   HeadText:{
-    marginTop: -60,
+    flexDirection: "row",
+    marginVertical: -20,
     justifyContent: "center",
     textAlign: "center",
     alignSelf: "center",
     height: 80,
+    marginHorizontal: 30,
   },
   TextRestaurant:{
     fontSize: 40,
     color: "white",
-    height: 150,
+    height: 120,
+    justifyContent: "center",
+    textAlign: "center",
+    alignSelf: "center",
   },
   preview: {
     justifyContent: "center",
@@ -89,10 +94,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 250,
     width: 300,
-    backgroundColor: "#d3d3d3",
+    backgroundColor: "white",
     padding: 12,
     marginTop: 40,
     paddingBottom: 25,
+    borderWidth: 1
   },
   submitButton: {
     justifyContent: "center",

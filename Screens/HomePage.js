@@ -1,26 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { RestaurantData, popular } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
+import { db, auth } from '../data/firebase';
 
 const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
 const HomePage = ({navigation}) => {
+
+  const[users, setUsers] = useState(null)
+    
+    const getUsers = async () => {
+            const querySanp = await db.collection('admin').get()
+            const allusers = querySanp.docs.map(docSnap=>docSnap.data())
+            console.log(allusers)
+            setUsers(allusers)
+    }
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
 
   const Item = ({ image, name, description }) => {
     return (
       <ScrollView >
       <View style={styles.listItem} >
           <Image source={{uri:image}} style={styles.img}/>
-          <View style={{marginLeft: 10}}>
-          <Text style={{fontWeight: "bold"}}>{name}</Text>
-          <View style={{width: 230}}>
-          <Text>{description}</Text>
-          </View>
-          </View>
-          </View>
+            <View style={{marginLeft: 10}}>
+              <Text style={{fontWeight: "bold"}}>{name}</Text>
+                <View style={{width: 230}}>
+                  <Text>{description}</Text>
+                </View>
+            </View>
+      </View>
       </ScrollView>
     );
   }
@@ -32,7 +48,7 @@ const HomePage = ({navigation}) => {
       <View style={styles.listItem2} onPress = {() => navigation.navigate("RestaurantDetails")}>
           <Image source={{uri:image}} style={styles.img}/>
           <View style={{marginLeft: 10}}>
-          <Text style={{fontWeight: "bold"}}>{name}</Text>
+            <Text style={{fontWeight: "bold"}}>{name}</Text>
           </View>
       </View>
       </ScrollView>
@@ -61,11 +77,12 @@ const HomePage = ({navigation}) => {
           </Text>
         
             <FlatList 
-              data={RestaurantData}
+            showsVerticalScrollIndicator={false}
+              data={users}
               renderItem={({ item }) => {
                 return(
                   <ScrollView>
-                    <TouchableOpacity onPress = {() => navigation.navigate("RestaurantDetails", {RestaurantData:item})}>
+                    <TouchableOpacity onPress = {() => navigation.navigate("RestaurantDetails", {users:item, adminuid: item.uid})}>
                       <Item image={item.image} name={item.name} description={item.description}/>
                     </TouchableOpacity>
                 </ScrollView>)}
@@ -171,7 +188,8 @@ listItem: {
   flex: 1,
   flexDirection: "row",
   borderRadius: 10,
-  backgroundColor: "#d3d3d3",
+  backgroundColor: "white",
+  borderWidth: 1
 },
 listItem2: {
   paddingLeft: 20,

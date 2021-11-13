@@ -1,14 +1,11 @@
 import React, {useState} from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, ImageBackground, FlatList } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { Description, HotItems } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-//import { RestaurantData } from '../data/flatListData';
-
-const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
+const image1 = {uri: "https://images.unsplash.com/photo-1560053608-13721e0d69e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
 const Item = ({ description }) => {
   return (
@@ -20,57 +17,56 @@ const Item = ({ description }) => {
 
 const Items = ({ image }) => {
   return (
-    <>
-    <ScrollView>
     <View style={styles.listItem2} >
         <Image source={{uri:image}} style={styles.img}/>
     </View>
-    </ScrollView>
-    
-    </>
   );
 }
 
 const RestaurantDetails = ({route, navigation}) => {
 
-  const [RestaurantData, setRestaurantData ] = useState('');
-
+  const [users, setUsers] = useState('');
+  const {adminuid } = route.params;
   useState(() => {
-    let { RestaurantData } = route.params;
-    setRestaurantData(RestaurantData)
-  }, [RestaurantData])
+    let { users,adminuid } = route.params;
+    setUsers(users)
+  }, [users])
 
   return (
-    
     <View style={styles.container}>
+      <ScrollView>
       <View style={styles.Top}>
-                <Image source = {image1} resizeMode="stretch" style={styles.image1}/>
+        <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
             <View  style={styles.HeadText}>
-                <Text style={styles.TextRestaurant}>
-                  {RestaurantData.name}
-                </Text>
+
+              <TouchableOpacity style={{marginHorizontal: -10}}>
+                <FontAwesome name="arrow-circle-left" size={35} color="white" onPress = {() => navigation.navigate("Home")}/>
+              </TouchableOpacity>
+
+              <Text style={styles.TextRestaurant}>
+                {users.name}
+              </Text>
+
             </View>
-        </View>
-        <SafeAreaView>
-          <ScrollView contentContainerStyle={{ flexGrow: 1}}>
+        </ImageBackground>
+      </View>
 
         <TouchableOpacity style={styles.bookTable} onPress = {() => navigation.navigate("BookingForm", {
-          name: RestaurantData.name,
-
+          name: users.name,
+          adminuid: adminuid,
           }
           )}>
           <Text style={styles.bookText}>Book Table</Text>
         </TouchableOpacity>
 
-        <View style={{flex:1, padding: 10}}>
+        <View>
 
               <FlatList 
                 data={Description}
                 renderItem={({ item }) => {
                   return(
-                    <ScrollView>
                         <Item description={item.description}/>
-                  </ScrollView>)}
+                  )}
               }
                   keyExtractor = {(item) => item.id}
               />
@@ -85,22 +81,28 @@ const RestaurantDetails = ({route, navigation}) => {
                 data={ HotItems }
                 renderItem={({ item }) => {
                   return(
-                    <ScrollView >
                   <Items image={item.image}/>
-                  </ScrollView>)}
+                  )}
               }
                   keyExtractor = {(item) => item.id}
               />
 
+              <View>
+                <TouchableOpacity style={styles.menuButton}  onPress = {() => navigation.navigate("Menu", {
+                  name: users.name,
+                  adminuid: adminuid,
+                })}>
+                  <Text style={styles.menuText}>View Menu</Text>
+                </TouchableOpacity>
+              </View>
+
           </ScrollView>
-    </SafeAreaView>
-      <View  style={styles.container}>
+
         <View style={styles.Tab}>
         <FontAwesome name="home" size={24} color="white" onPress = {() => navigation.navigate("Home")}/>
         <FontAwesome name="list" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Bookings")}/>
         <FontAwesome name="user-circle-o" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Profile")}/>
         </View>
-      </View>
     </View>
     
   )
@@ -110,6 +112,20 @@ export default RestaurantDetails;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+},
+menuButton: {
+  justifyContent: "center",
+    alignSelf: "center",
+    borderRadius: 20,
+    height: 60,
+    width: 150,
+    backgroundColor: "#2e8b57",
+    margin: 10
+},
+menuText: {
+  textAlign: "center",
+    fontSize: 15,
+    color: "#ffffff"
 },
   Tab: {
     flex: 1,
@@ -138,17 +154,21 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20
   },
   HeadText:{
-    marginTop: -60,
+    flexDirection: "row",
+    marginVertical: -20,
     justifyContent: "center",
     textAlign: "center",
     alignSelf: "center",
     height: 80,
-    
+    marginHorizontal: 10, 
+      
   },
   TextRestaurant:{
     fontSize: 40,
     color: "white",
     height: 150,
+    paddingHorizontal: 90
+   
   },
   bookTable:{
     justifyContent: "center",
@@ -157,6 +177,7 @@ const styles = StyleSheet.create({
     height: 120,
     width: 300,
     backgroundColor: "#2e8b57",
+    margin: 10
 
   },
   bookText:{
@@ -170,8 +191,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 120,
     width: 300,
-    backgroundColor: "#d3d3d3",
-    padding: 10
+    backgroundColor: "white",
+    padding: 10,
+    marginBottom: 20,
+    borderWidth: 1
   },
   RestaurantList: {
     fontSize: 30, 
