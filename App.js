@@ -13,6 +13,8 @@ import BookingForm from './Screens/BookingForm';
 import Preview from './Screens/Preview';
 import Finished from './Screens/Finished';
 import Menu from './Screens/Menu';
+import MealsPage from './Screens/Meals';
+import Drinks from './Screens/Drinks';
 
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +33,8 @@ const MyStack = () => {
         <Stack.Screen name="Preview" component={Preview} options= {{headerShown: false}}/>
         <Stack.Screen name="Finished" component={Finished} options= {{headerShown: false}}/>
         <Stack.Screen name="Menu" component={Menu} options= {{headerShown: false}}/>
+        <Stack.Screen name= "MealsPage" component={MealsPage} options= {{headerShown: false}}/>
+  <Stack.Screen name= "Drinks" component={Drinks} options= {{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

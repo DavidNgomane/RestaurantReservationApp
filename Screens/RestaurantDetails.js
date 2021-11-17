@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { Description, HotItems } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
+import { setStatusBarHidden } from 'expo-status-bar';
 
 const image1 = {uri: "https://images.unsplash.com/photo-1560053608-13721e0d69e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
@@ -26,15 +27,18 @@ const Items = ({ image }) => {
 const RestaurantDetails = ({route, navigation}) => {
 
   const [users, setUsers] = useState('');
-  const {adminuid } = route.params;
+  
+
+  const [adminuid, setUid] = useState('')
   useState(() => {
     let { users,adminuid } = route.params;
     setUsers(users)
+    setUid(adminuid)
   }, [users])
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView nestedScrollEnabled={true}>
       <View style={styles.Top}>
         <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
             <View  style={styles.HeadText}>

@@ -1,52 +1,62 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, { useState,  useEffect } from 'react';
+import { Text, View, StyleSheet, useWindowDimensions, TouchableOpacity,ScrollView,FlatList, Image, TextInput } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { auth, db } from '../data/firebase'
+import constant from 'expo-constants';
+import { NavigationContainer } from '@react-navigation/native';
+import Drinks from './Drinks'
+import MealsPage from './Meals';
+import { TabView, SceneMap } from 'react-native-tab-view';
 
-const Menu = ({route, navigation}) => {
+const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
-    const[users, setUsers] = useState(null);
+const MealsRoute = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081', height: 100}}>
+    <MealsPage/>
+  </View>
+);
 
-    const { name, adminuid } = route.params;
+const DrinksRoute = () => (
+  <View style={{ flex: 1, backgroundColor: '#673ab7',  height: 100}}>
+    <Drinks/>
+  </View>
+);
 
-    const Bookings = async () => {
-        const uid = auth?.currentUser?.uid;
-        const querySanp = await db.collection('Meals').where("adminuid", "==", uid).get();
-        const allusers = querySanp.docs.map(docSnap=>docSnap.data())
-      
-        console.log(allusers)
-        setUsers(allusers)
-      }
-      
-      useEffect(() => {
-      Bookings()
-      }, [])
+const renderScene = SceneMap({
+  meals: MealsRoute,
+  drinks: DrinksRoute,
+});
 
-      const Bookings = async () => {
-        const uid = auth?.currentUser?.uid;
-        const querySanp = await db.collection('Drinks').where("adminuid", "==", uid).get();
-        const allusers = querySanp.docs.map(docSnap=>docSnap.data())
-      
-        console.log(allusers)
-        setUsers(allusers)
-      }
-      
-      useEffect(() => {
-      Bookings()
-      }, [])
+
+const MenuPage = ({navigation}) => {
+
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'meals', title: 'Meals' },
+    { key: 'drinks', title: 'Drinks' },
+  ])
+
 
     return(
         <View style={styles.container}>
-            <Text>Welcome to Menu</Text>
+          <TabView style={{marginTop: 15}} 
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width }}
+         />
         </View>
-    );
+    )
 }
-
-export default Menu;
+export default MenuPage;
 
 const styles = StyleSheet.create({
-container:{
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 100
-}
-});
+    container: {
+        flex: 1,
+       height: "100%",
+       width: "100%"
+    },
+})
+

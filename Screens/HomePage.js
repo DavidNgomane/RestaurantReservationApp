@@ -14,11 +14,11 @@ const HomePage = ({navigation}) => {
   const[users, setUsers] = useState(null)
     
     const getUsers = async () => {
-            const querySanp = await db.collection('admin').get()
-            const allusers = querySanp.docs.map(docSnap=>docSnap.data())
-            console.log(allusers)
-            setUsers(allusers)
-    }
+    const querySanp = await db.collection('admin').get()
+    const allusers = querySanp.docs.map(docSnap=>docSnap.data())
+    console.log(allusers)
+    setUsers(allusers)
+  }
 
     useEffect(() => {
         getUsers()
