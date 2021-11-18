@@ -1,19 +1,20 @@
 import React, { useState,  useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity,ScrollView,FlatList, TextInput } from 'react-native';
+import { Text, View, StyleSheet, Image, ImageBackground, TouchableOpacity,ScrollView,FlatList, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { auth, db } from '../data/firebase'
 import constant from 'expo-constants';
 
-const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
+const image1 = {uri: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NXx8ZHJpbmtzfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
 
-export default function DrinksPage  ({route}) {
+export default function Drinks  ({route, navigation}) {
 
   const[users, setUsers] = useState(null)
-  const uid = auth.currentUser.uid;
-    
+  //const uid = auth.currentUser.uid;
+  const { adminuid } = route.params;
+
   const getUsers = async () => {
-          const querySanp = await db.collection('drinks').where('adminuid', '==', users.uid).get()
+          const querySanp = await db.collection('drinks').where("uid", "==" , adminuid).get()
           const allusers = querySanp.docs.map(docSnap=>docSnap.data())
           console.log(allusers)
           setUsers(allusers)
@@ -41,6 +42,25 @@ const Item = ({ image, name, price }) => {
 }
     return(
         <View style={styles.container}>
+         
+            <View style={styles.Top}>
+              <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
+               <View  style={styles.HeadText}>
+
+              <TouchableOpacity style={{marginHorizontal: -10}}>
+                <FontAwesome name="arrow-circle-left" size={35} color="white" onPress = {() => navigation.navigate("RestaurantDetails", {name: users.name,
+                  adminuid: adminuid,})}/>
+              </TouchableOpacity>
+
+              <Text style={styles.TextRestaurant}>
+                Drinks
+              </Text>
+
+            </View>
+        </ImageBackground>
+      </View>
+    
+       <View style={{backgroundColor: "#2e8b57"}}>
         <FlatList 
             showsVerticalScrollIndicator={false}
               data={users}
@@ -53,6 +73,7 @@ const Item = ({ image, name, price }) => {
                 keyExtractor = {(item) => item.id}
             />
         </View>
+        </View>
     )
 }
 
@@ -61,7 +82,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
        height: "100%",
-       width: "100%"
+       width: "100%",
     },
     Top:{
         marginTop: constant.statusBarHeight,
@@ -101,6 +122,35 @@ const styles = StyleSheet.create({
         height: 80,
         width: 80,
         borderRadius: 10
-      }
+      },
+      Top:{
+        marginTop: constant.statusBarHeight,
+        height: 150,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+      },
+      image1: {
+        flex: 1, 
+        justifyContent: "center", 
+        borderBottomRightRadius: 20, 
+        borderBottomLeftRadius: 20
+      },
+      HeadText:{
+        flexDirection: "row",
+        marginVertical: -20,
+        justifyContent: "center",
+        textAlign: "center",
+        alignSelf: "center",
+        height: 80,
+        marginHorizontal: 10, 
+          
+      },
+      TextRestaurant:{
+        fontSize: 40,
+        color: "white",
+        height: 150,
+        paddingHorizontal: 90
+       
+      },
 })
 

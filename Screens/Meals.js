@@ -1,22 +1,21 @@
 import React, { useState,  useEffect } from 'react';
-import { Text, View, StyleSheet,Image, TouchableOpacity,ScrollView,FlatList, TextInput } from 'react-native';
+import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity,ScrollView,FlatList, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { auth, db } from '../data/firebase'
 import constant from 'expo-constants';
-import { withRepeat } from 'react-native-reanimated';
 
-const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
+const image1 = {uri: "https://media.istockphoto.com/photos/stuffed-turkey-for-thanksgiving-holidays-picture-id1278088432?b=1&k=20&m=1278088432&s=170667a&w=0&h=G-GizQuAXSUQKEdFZ4SKZN543t-mvc_MkjRBypjaVak="};
 
-
-export default function MealsPage  ({route}) {
+export default function MealsPage  ({route, navigation}) {
 
   const[users, setUsers] = useState(null)
-  const uid = auth.currentUser.uid;
+  //const uid = auth.currentUser.uid;
+  const { adminuid } = route.params;
     
   const getUsers = async () => {
-          const querySanp = await db.collection('meals').where('adminuid', '==', uid).get()
+          const querySanp = await db.collection('meals').where("uid", "==" , adminuid).get()
           const allusers = querySanp.docs.map(docSnap=>docSnap.data())
-          console.log(allusers)
+          console.log(adminuid)
           setUsers(allusers)
   }
 
@@ -34,7 +33,7 @@ const Item = ({ image, name, price }) => {
             <Text style={{fontWeight: "bold"}}>{name}</Text>
               <View style={{width: 230}}>
                 <Text>{price}</Text>
-              </View>
+              </View> 
           </View>
     </View>
     </ScrollView>
@@ -43,7 +42,25 @@ const Item = ({ image, name, price }) => {
 
     return(
         <View style={styles.container}>
+          <View style={styles.Top}>
+        <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
+            <View  style={styles.HeadText}>
+
+              <TouchableOpacity style={{marginHorizontal: -10}}>
+                <FontAwesome name="arrow-circle-left" size={35} color="white" onPress = {() => navigation.navigate("RestaurantDetails", {
+                name: users.name,
+                adminuid: adminuid})}/>
+              </TouchableOpacity>
+
+              <Text style={styles.TextRestaurant}>
+                Meals
+              </Text>
+
+            </View>
+        </ImageBackground>
+      </View>
            
+      <View style={{backgroundColor: "#2e8b57"}}>
         <FlatList 
             showsVerticalScrollIndicator={false}
               data={users}
@@ -56,6 +73,7 @@ const Item = ({ image, name, price }) => {
                 keyExtractor = {(item) => item.id}
             />
         </View>
+         </View> 
     )
 }
 
@@ -65,30 +83,6 @@ const styles = StyleSheet.create({
        height: "100%",
        width: "100%"
     },
-    Top:{
-        marginTop: constant.statusBarHeight,
-        height: 150,
-        borderBottomRightRadius: 20,
-        borderBottomLeftRadius: 20,
-      },
-      image1: {
-        flex: 1, 
-        justifyContent: "center", 
-        borderBottomRightRadius: 20, 
-        borderBottomLeftRadius: 20
-      },
-      HeadText:{
-        marginTop: -60,
-        justifyContent: "center",
-        textAlign: "center",
-        alignSelf: "center",
-        height: 80,
-      },
-      TextRestaurant:{
-        fontSize: 40,
-        color: "white",
-        height: 150,
-      },
       listItem: {
         paddingLeft: 5,
         paddingTop: 5,
@@ -103,6 +97,35 @@ const styles = StyleSheet.create({
         height: 80,
         width: 80,
         borderRadius: 10
-      }
+      },
+      Top:{
+        marginTop: constant.statusBarHeight,
+        height: 150,
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+      },
+      image1: {
+        flex: 1, 
+        justifyContent: "center", 
+        borderBottomRightRadius: 20, 
+        borderBottomLeftRadius: 20
+      },
+      HeadText:{
+        flexDirection: "row",
+        marginVertical: -20,
+        justifyContent: "center",
+        textAlign: "center",
+        alignSelf: "center",
+        height: 80,
+        marginHorizontal: 10, 
+          
+      },
+      TextRestaurant:{
+        fontSize: 40,
+        color: "white",
+        height: 150,
+        paddingHorizontal: 90
+       
+      },
 })
 

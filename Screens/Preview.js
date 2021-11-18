@@ -12,7 +12,6 @@ const BookingForm = ({route, navigation}) => {
        <View style={styles.Top}>
         <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
             <View  style={styles.HeadText}>
-              
             <TouchableOpacity style={{marginHorizontal: -10}}>
                 <FontAwesome name="arrow-circle-left" size={30} color="white" onPress = {() => navigation.navigate("BookingForm")}/>
               </TouchableOpacity>
@@ -20,7 +19,6 @@ const BookingForm = ({route, navigation}) => {
               <Text style={styles.TextRestaurant}>
                 Make a Reservation
               </Text>
-
             </View>
         </ImageBackground>
       </View>

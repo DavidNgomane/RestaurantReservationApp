@@ -32,7 +32,7 @@ const MyStack = () => {
         <Stack.Screen name="BookingForm" component={BookingForm} options= {{headerShown: false}}/>
         <Stack.Screen name="Preview" component={Preview} options= {{headerShown: false}}/>
         <Stack.Screen name="Finished" component={Finished} options= {{headerShown: false}}/>
-        <Stack.Screen name="Menu" component={Menu} options= {{headerShown: false}}/>
+        {/*<Stack.Screen name="Menu" component={Menu} options= {{headerShown: false}}/>*/}
         <Stack.Screen name= "MealsPage" component={MealsPage} options= {{headerShown: false}}/>
   <Stack.Screen name= "Drinks" component={Drinks} options= {{headerShown: false}}/>
       </Stack.Navigator>

@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { Description, HotItems } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
-import { setStatusBarHidden } from 'expo-status-bar';
+import { auth, db } from '../data/firebase'
 
 const image1 = {uri: "https://images.unsplash.com/photo-1560053608-13721e0d69e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
@@ -28,12 +28,13 @@ const RestaurantDetails = ({route, navigation}) => {
 
   const [users, setUsers] = useState('');
   
-
-  const [adminuid, setUid] = useState('')
+  const { adminuid } = route.params;
+  //const [adminuid, setUid] = useState('')
   useState(() => {
-    let { users,adminuid } = route.params;
+    let { users,  } = route.params;
     setUsers(users)
-    setUid(adminuid)
+    console.log(users)
+    //setUid(adminuid)
   }, [users])
 
   return (
@@ -91,12 +92,19 @@ const RestaurantDetails = ({route, navigation}) => {
                   keyExtractor = {(item) => item.id}
               />
 
-              <View>
-                <TouchableOpacity style={styles.menuButton}  onPress = {() => navigation.navigate("Menu", {
+              <View style={{flexDirection: "row", justifyContent: "center"}}>
+                <TouchableOpacity style={styles.menuButton}  onPress = {() => navigation.navigate("MealsPage", {
                   name: users.name,
                   adminuid: adminuid,
                 })}>
-                  <Text style={styles.menuText}>View Menu</Text>
+                  <Text style={styles.menuText}>View Meals</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.menuButton}  onPress = {() => navigation.navigate("Drinks", {
+                  name: users.name,
+                  adminuid: adminuid,
+                })}>
+                  <Text style={styles.menuText}>View Drinks</Text>
                 </TouchableOpacity>
               </View>
 
