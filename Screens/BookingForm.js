@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, SafeAreaView,ScrollView, 
-TextInput, Text, ImageBackground } from 'react-native';
+TextInput, Text, ImageBackground, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { auth, db } from '../data/firebase'
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const image1 = {uri: "https://images.unsplash.com/photo-1565650834520-0b48a5c83f43?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzh8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
@@ -13,17 +14,38 @@ const BookingForm = ({route, navigation}) => {
 
   const { name, adminuid } = route.params;
 
-  const [number, setNumber] = useState();
-  const [date, setDate] = useState();
-  const [time, setTime] = useState();
+  const [number, setNumber] = useState()
+  const [date, setDate] = useState(new Date());
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+  const [text, setText] = useState(false);
 
+
+  
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'Android');
+    setDate(currentDate);
+
+  const tempDate = new Date(currentDate);
+    const fDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
+    const fTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+    setText(fDate + '\n' + fTime)
+    //setText(fDate + ' (' + fTime + ') ')
+  };
+
+  const showMode = (currentMode) => {
+     setShow(true);
+     setMode(currentMode);
+  }
+
+  
   const booking = () => {
     const user = auth.currentUser;
       navigation.navigate("Preview", {
         restaurant: name,
         number: number,  
         date: date,
-        time: time,
         adminuid: adminuid
       });
 
@@ -32,7 +54,6 @@ const BookingForm = ({route, navigation}) => {
           restaurant: name,
           numberOfPeople: number,  
           date: date,
-          time: time,
           adminuid: adminuid
       })
      
@@ -69,41 +90,44 @@ const BookingForm = ({route, navigation}) => {
             <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
               <FontAwesome5 name="users" size={24} color="black" />
               <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold"}}>Number of People</Text>
-              </View>
               <TextInput 
+                style={styles.input}
                 keyboardType='numeric'
                 style={styles.input}
                 onChangeText={text => setNumber(text)}
                 value={number}
               />
+              </View>
           </View>
 
           <View style={styles.TextField}>
             <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
-            <FontAwesome name="calendar" size={24} color="black" />
+            <FontAwesome name="calendar" size={24} color="black" onPress={() => showMode('date')}/>
             <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold", }}>Date Preferred</Text>
+            <Text>{text}</Text>
             </View>
-            <TextInput 
-              style={styles.input}
-              onChangeText={date => setDate(date)}
-              value={date}
-            />
           </View>
 
           <View style={styles.TextField}>
           <View style={{flex: 1, flexDirection: "row", marginHorizontal: 3}}>
-          <FontAwesome name="clock-o" size={24} color="black" />
+          <FontAwesome name="clock-o" size={24} color="black" onPress={() => showMode('time')}/>
           <Text style={{flex: 1, flexDirection: "row", marginHorizontal: 10,fontWeight: "bold"}}>Time Preferred</Text>
+          <Text>{text}</Text>
           </View>
-          <TextInput 
-            style={styles.input}
-            onChangeText={time => setTime(time)}
-            value={time}
-          />
           </View>
+          {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
 
           <View style={styles.Button}>
-            <TouchableOpacity  onPress = { booking } style={styles.submitButton}>
+            <TouchableOpacity onPress={booking} style={styles.submitButton}>
               <Text style={styles.submitText}>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -166,6 +190,9 @@ const styles = StyleSheet.create({
     height: 40,
     margin: 12,
     padding: 10,
+    borderWidth: 1,
+    width: 70,
+    marginTop: 25
     
   },
   TextField: {

@@ -20,6 +20,7 @@ const RegisterPage = ({navigation}) => {
           return db.collection('users').doc(user.uid).set({
               uid: user.uid,
               name: name,
+              surname: surname,
               email:user.email,
           })
          

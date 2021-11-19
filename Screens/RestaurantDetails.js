@@ -29,12 +29,10 @@ const RestaurantDetails = ({route, navigation}) => {
   const [users, setUsers] = useState('');
   
   const { adminuid } = route.params;
-  //const [adminuid, setUid] = useState('')
   useState(() => {
     let { users,  } = route.params;
     setUsers(users)
     console.log(users)
-    //setUid(adminuid)
   }, [users])
 
   return (

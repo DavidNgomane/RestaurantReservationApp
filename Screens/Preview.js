@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image, Text, ImageBackground } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
+import moment from 'moment';
 
 const image1 = {uri: "https://images.unsplash.com/photo-1599458448510-59aecaea4752?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTZ8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
@@ -26,8 +27,8 @@ const BookingForm = ({route, navigation}) => {
         <View style={styles.preview}>
           <Text style={{fontSize: 30, color: "#2e8b57"}}>Restaurant: {route.params.resto}</Text>
           <Text >Number of people:{route.params.number}</Text> 
-          <Text >Date Preferred: {route.params.date}</Text>
-          <Text >Time Preferred: {route.params.time}</Text>
+          <Text >Date Preferred: {moment(route.params.date).format("DD/MM/YYYY")}</Text>
+          <Text >Time Preferred: {moment(route.params.time).format("hh:mm a")}</Text>
         </View>
 
         <View style={styles.Button}>
