@@ -14,7 +14,7 @@ export default function Drinks  ({route, navigation}) {
   const { adminuid } = route.params;
 
   const getUsers = async () => {
-          const querySanp = await db.collection('drinks').where("uid", "==" , adminuid).get()
+          const querySanp = await db.collection('drinks').where("uid", "==" , uid).get()
           const allusers = querySanp.docs.map(docSnap=>docSnap.data())
           console.log(allusers)
           setUsers(allusers)

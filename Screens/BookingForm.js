@@ -7,7 +7,6 @@ import constant from 'expo-constants';
 import { auth, db } from '../data/firebase'
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 const image1 = {uri: "https://images.unsplash.com/photo-1565650834520-0b48a5c83f43?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nzh8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
 const BookingForm = ({route, navigation}) => {
@@ -20,11 +19,11 @@ const BookingForm = ({route, navigation}) => {
   const [show, setShow] = useState(false);
   const [text, setText] = useState(false);
 
-
+  const [status, setStatus] = useState("");
   
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'Android');
+    setShow(Platform.OS === 'android');
     setDate(currentDate);
 
   const tempDate = new Date(currentDate);
@@ -39,14 +38,14 @@ const BookingForm = ({route, navigation}) => {
      setMode(currentMode);
   }
 
-  
   const booking = () => {
     const user = auth.currentUser;
       navigation.navigate("Preview", {
         restaurant: name,
         number: number,  
         date: date,
-        adminuid: adminuid
+        adminuid: adminuid,
+        status: "Pending",
       });
 
           return db.collection('Bookings').add({
@@ -54,16 +53,19 @@ const BookingForm = ({route, navigation}) => {
           restaurant: name,
           numberOfPeople: number,  
           date: date,
+          status: "Pending",
           adminuid: adminuid
+      }).then((docRef) => {
+        docRef.update({
+          key: docRef.id,
+        })
       })
-     
-    
     .catch((error) => {
-     
       const errorMessage = error.message;
       alert(errorMessage)
     });
   }
+
 
   return (
     <View  style={styles.container}>

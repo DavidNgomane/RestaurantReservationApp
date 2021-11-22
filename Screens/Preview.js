@@ -29,6 +29,7 @@ const BookingForm = ({route, navigation}) => {
           <Text >Number of people:{route.params.number}</Text> 
           <Text >Date Preferred: {moment(route.params.date).format("DD/MM/YYYY")}</Text>
           <Text >Time Preferred: {moment(route.params.time).format("hh:mm a")}</Text>
+          <Text >Status: {route.params.status}</Text>
         </View>
 
         <View style={styles.Button}>
