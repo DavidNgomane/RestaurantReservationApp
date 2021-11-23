@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Image, Modal, Pressable, TextInput, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import * as ImagePicker from 'expo-image-picker';
-import { auth, db } from '../data/firebase'
+import { auth, db, storageRef, fb } from '../data/firebase'
 
 const UpdatePage = ({navigation}) => {
 
@@ -24,6 +24,45 @@ const pickImage = async () => {
       setImage(result.uri);
     }
   };
+  const [uploding, setUploading] = useState(false)
+
+    const uploadImage = async () => {
+        const blob = await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                resolve(xhr.response);
+            };
+            xhr.onerror = function() {
+                reject(new TypeError('Network request failed!'));
+            };
+            xhr.responseType = 'blob';
+            xhr.open('GET', image, true);
+            xhr.send(null);
+        });
+
+        const ref = storageRef.child(new Date().toISOString());
+        const snapshot = ref.put(blob);
+
+        snapshot.on(fb, () => {
+            setUploading(true);
+        },
+        (error) => {
+            setUploading(false);
+            console.log(error);
+            blob.close();
+            return
+        },
+        () => {
+            snapshot.snapshot.ref.getDownloadURL().then((url) => {
+                setUploading(false)
+                console.log('Download url : ', url)
+                setImage(url)
+                blob.close();
+                return url
+            })
+        }
+        );
+    }
 
   const update = () => {
     try {
@@ -52,7 +91,7 @@ return (
     <View  style={styles.container}>
       <View style={{marginLeft: 30, marginTop: 40}}>
         <FontAwesome name="window-close" size={24} color="#5f9ea0" onPress={() => navigation.navigate("Profile")}/>
-    </View>
+      </View>
 
     <View style={{justifyContent: "center", alignItems: "center"}}>
         <TouchableOpacity  onPress={pickImage}>
@@ -64,10 +103,14 @@ return (
 
           <View style={{paddingTop: 55}}>
             <TouchableOpacity style={styles.touch1} onPress={update}>
-                <Text style={styles.text2}>Upload Details</Text>
+                <Text style={styles.text2}>Update Details</Text>
             </TouchableOpacity>  
             </View>
-
+            <View style={{paddingTop: 55}}>
+            {!uploding ? <TouchableOpacity style={styles.touch1} onPress={uploadImage}>
+                <Text style={styles.text2}>Upload image</Text>
+            </TouchableOpacity> : <ActivityIndicator size='large' color='red' /> } 
+            </View>
     </View>
     )
 }

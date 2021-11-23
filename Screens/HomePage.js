@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { RestaurantData, popular } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
-import { db, auth } from '../data/firebase';
+import { auth, db, storageRef, fb } from '../data/firebase';
 
 const image1 = {uri: "https://images.unsplash.com/photo-1522336572468-97b06e8ef143?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MzF8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 

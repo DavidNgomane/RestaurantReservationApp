@@ -78,11 +78,11 @@ const Bookings = ({navigation}) => {
        <View style={{paddingLeft: 15, paddingTop: 10, justifyContent: "center", alignItems: "center"}}>
           <View>
           <FlatList
-          verticall={false} showsHorizontalScrollIndicator={false}
-                    data={users}
-                    renderItem={({item})=> {return <RenderCard item={item} key={item.key}/>}}
-                    keyExtractor={(item) =>item.uid}             
-              />
+            verticall={false} showsHorizontalScrollIndicator={false}
+            data={users}
+            renderItem={({item})=> {return <RenderCard item={item} key={item.key}/>}}
+            keyExtractor={(item) =>item.uid}             
+          />
           </View>
           </View>
 
@@ -123,9 +123,9 @@ const styles = StyleSheet.create({
 listItem: {
   paddingLeft: 3,
   paddingTop: 3,
-  paddingBottom: 3,
-  margin: 3,
-  marginTop: 35,
+  //paddingBottom: ,
+  //margin: 3,
+  marginTop: 20,
   flex: 1,
   //flexDirection: "column",
   borderRadius: 10,

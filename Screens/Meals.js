@@ -1,7 +1,7 @@
 import React, { useState,  useEffect } from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity,ScrollView,FlatList, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { auth, db } from '../data/firebase'
+import { auth, db, storageRef, fb} from '../data/firebase'
 import constant from 'expo-constants';
 
 const image1 = {uri: "https://media.istockphoto.com/photos/stuffed-turkey-for-thanksgiving-holidays-picture-id1278088432?b=1&k=20&m=1278088432&s=170667a&w=0&h=G-GizQuAXSUQKEdFZ4SKZN543t-mvc_MkjRBypjaVak="};
@@ -13,17 +13,16 @@ export default function MealsPage  ({route, navigation}) {
   const { adminuid } = route.params;
     
   const getUsers = async () => {
-          const querySanp = await db.collection('meals').where("uid", "==" , adminuid).get()
-          const allusers = querySanp.docs.map(docSnap=>docSnap.data())
-          console.log(adminuid)
-          setUsers(allusers)
-  }
+    const querySanp = await db.collection('meals').where('uid', '==',adminuid).onSnapshot((querySanp) => {
+      const allusers = querySanp.docs.map(docSnap=>docSnap.data())
+      console.log(allusers)
+      setUsers(allusers)})
+    
+}
 
-  useEffect(() => {
-      getUsers()
-  }, [])
-
-
+useEffect(() => {
+getUsers()
+}, [])
 const Item = ({ image, name, price }) => {
   return (
     <ScrollView >

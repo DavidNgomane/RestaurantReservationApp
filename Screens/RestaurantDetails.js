@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import constant from 'expo-constants';
 import { Description, HotItems } from '../data/flatListData';
 import { ScrollView } from 'react-native-gesture-handler';
-import { auth, db } from '../data/firebase'
+import { auth, db, storageRef, fb } from '../data/firebase'
 
 const image1 = {uri: "https://images.unsplash.com/photo-1560053608-13721e0d69e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTV8fHJlc3RhdXJhbnR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"};
 
@@ -105,14 +105,7 @@ const RestaurantDetails = ({route, navigation}) => {
                   <Text style={styles.menuText}>View Drinks</Text>
                 </TouchableOpacity>
               </View>
-
           </ScrollView>
-
-        <View style={styles.Tab}>
-        <FontAwesome name="home" size={24} color="white" onPress = {() => navigation.navigate("Home")}/>
-        <FontAwesome name="list" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Bookings")}/>
-        <FontAwesome name="user-circle-o" size={24} color="white" style={{marginLeft: 130}} onPress = {() => navigation.navigate("Profile")}/>
-        </View>
     </View>
     
   )

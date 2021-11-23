@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Image, FlatList,ScrollView,  TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { auth, db } from '../data/firebase';
+import { auth, db, storageRef, fb } from '../data/firebase';
 import * as ImagePicker from 'expo-image-picker';
 
 
