@@ -23,7 +23,7 @@ const BookingForm = ({route, navigation}) => {
   
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'android');
+    setShow(Platform.OS === 'ios');
     setDate(currentDate);
 
   const tempDate = new Date(currentDate);

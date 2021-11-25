@@ -106,11 +106,6 @@ return (
                 <Text style={styles.text2}>Update Details</Text>
             </TouchableOpacity>  
             </View>
-            <View style={{paddingTop: 55}}>
-            {!uploding ? <TouchableOpacity style={styles.touch1} onPress={uploadImage}>
-                <Text style={styles.text2}>Upload image</Text>
-            </TouchableOpacity> : <ActivityIndicator size='large' color='red' /> } 
-            </View>
     </View>
     )
 }
