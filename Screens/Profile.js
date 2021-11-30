@@ -9,6 +9,8 @@ const Profile = ({navigation}) => {
 
   const[users, setUsers] = useState(null)
   const [image, setImage] = useState('');
+  const [uploading, setUploading] = useState(false);
+
   const uid = auth.currentUser.uid;
 
 
@@ -55,6 +57,9 @@ const Item = ({ image, name, surname, email }) => {
 
   return (
     <View style={styles.container}>
+       <Text style={{textAlign: "center", color: "#2e8b57", fontSize: 25, marginBottom: 5, marginTop: 50}}>
+             Update User Profile
+             </Text>
             <View>
                 <FlatList 
                     showsVerticalScrollIndicator={false}
@@ -71,7 +76,13 @@ const Item = ({ image, name, surname, email }) => {
 
             <View style={{ justifyContent: "center", marginTop: 15}}>
                 <TouchableOpacity style={styles.menuButton}  onPress = {() => navigation.navigate("UpdatePage")}>
-                  <Text style={styles.menuText}>Update Details</Text>
+                {!uploading ? (<Text style={styles.menuText}>Update Details</Text>)  : (
+                    <ActivityIndicator
+                      size="large"
+                      color="black"
+                      style={{ alignSelf: "center" }}
+                    />
+                  )}
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.menuButton}  onPress = {Signout}>

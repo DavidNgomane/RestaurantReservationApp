@@ -36,8 +36,7 @@ const RestaurantDetails = ({route, navigation}) => {
   }, [users])
 
   return (
-    <View style={styles.container}>
-      <ScrollView nestedScrollEnabled={true}>
+      <ScrollView style={styles.container} >
       <View style={styles.Top}>
         <ImageBackground source = {image1} resizeMode="cover" style={styles.image1}>
             <View  style={styles.HeadText}>
@@ -106,7 +105,6 @@ const RestaurantDetails = ({route, navigation}) => {
                 </TouchableOpacity>
               </View>
           </ScrollView>
-    </View>
     
   )
 }

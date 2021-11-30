@@ -85,7 +85,8 @@ const HomePage = ({navigation}) => {
                     <TouchableOpacity onPress = {() => navigation.navigate("RestaurantDetails", {users:item, adminuid: item.uid})}>
                       <Item image={item.image} name={item.name} description={item.description}/>
                     </TouchableOpacity>
-                </ScrollView>)}
+                </ScrollView>
+                )}
             }
                 keyExtractor = {(item) => item.id}
             />

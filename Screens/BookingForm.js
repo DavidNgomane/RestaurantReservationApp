@@ -58,6 +58,8 @@ const BookingForm = ({route, navigation}) => {
       }).then((docRef) => {
         docRef.update({
           key: docRef.id,
+          approval: "disabled",
+
         })
       })
     .catch((error) => {

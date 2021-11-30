@@ -9,60 +9,48 @@ import { auth, db, storageRef, fb } from '../data/firebase'
 const UpdatePage = ({navigation}) => {
 
 const [image, setImage] = useState('');
+const [uploading, setUploading] = useState(false);
 
 const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  console.log(result.uri);
+
+  if (!result.cancelled) {
+    setUploading(true)
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new TypeError("Network request failed!"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", result.uri, true);
+      xhr.send(null);
     });
 
-    console.log(result);
-
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
-  };
-  const [uploding, setUploading] = useState(false)
-
-    const uploadImage = async () => {
-        const blob = await new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.onload = function() {
-                resolve(xhr.response);
-            };
-            xhr.onerror = function() {
-                reject(new TypeError('Network request failed!'));
-            };
-            xhr.responseType = 'blob';
-            xhr.open('GET', image, true);
-            xhr.send(null);
-        });
-
-        const ref = storageRef.child(new Date().toISOString());
-        const snapshot = ref.put(blob);
-
-        snapshot.on(fb, () => {
-            setUploading(true);
-        },
-        (error) => {
-            setUploading(false);
-            console.log(error);
-            blob.close();
-            return
-        },
-        () => {
-            snapshot.snapshot.ref.getDownloadURL().then((url) => {
-                setUploading(false)
-                console.log('Download url : ', url)
-                setImage(url)
-                blob.close();
-                return url
-            })
-        }
+    const ref = storageRef.child(new Date().toISOString());
+    const snapshot = (await ref.put(blob)).ref
+      .getDownloadURL()
+      .then((imageUrl) => {
+        setImage(imageUrl);
+        console.log(
+          imageUrl,
+          "this is setting the image too storage before 3"
         );
-    }
+
+        blob.close();
+        setUploading(false)
+      });
+  }
+};
 
   const update = () => {
     try {
@@ -90,8 +78,9 @@ const pickImage = async () => {
 return (
     <View  style={styles.container}>
       <View style={{marginLeft: 30, marginTop: 40}}>
-        <FontAwesome name="window-close" size={24} color="#5f9ea0" onPress={() => navigation.navigate("Profile")}/>
+        <FontAwesome name="window-close" size={24} color="#2e8b57" onPress={() => navigation.navigate("Profile")}/>
       </View>
+      <Text style={{textAlign: "center", color: "#2e8b57", fontSize: 25, marginBottom: 10, marginTop: 10}}>update profile picture</Text>
 
     <View style={{justifyContent: "center", alignItems: "center"}}>
         <TouchableOpacity  onPress={pickImage}>
@@ -103,7 +92,13 @@ return (
 
           <View style={{paddingTop: 55}}>
             <TouchableOpacity style={styles.touch1} onPress={update}>
-                <Text style={styles.text2}>Update Details</Text>
+            {!uploading ? (<Text style={styles.text2}>Update Details</Text>)  : (
+                    <ActivityIndicator
+                      size="large"
+                      color="black"
+                      style={{ alignSelf: "center" }}
+                    />
+                  )}
             </TouchableOpacity>  
             </View>
     </View>
@@ -141,7 +136,7 @@ const styles = StyleSheet.create({
         padding: 10,
       },
     touch1: {
-        backgroundColor: '#5f9ea0',
+        backgroundColor: '#2e8b57',
         width: 220,
         borderRadius: 20,
         padding: 15,
